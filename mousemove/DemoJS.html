@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+<img src="img.jpg" alt="" width="50" height="50" id="pic"/>
+<script>
+    var timer = null;
+    //找人
+    var pic = document.getElementById("pic");
+    //在页面上点击 获取点击时候的位置 让图片 飞过来
+    document.onclick = function (event) {
+        clearInterval(timer);//防止重复调用
+        var event = event || window.event;
+        //获取页面上的位置
+        var pageX = event.pageX || event.clientX + document.documentElement.scrollLeft;
+        var pageY = event.pageY || event.clientY + document.documentElement.scrollTop;
+        //让图片 渐渐地 飞过来
+        timer = setInterval(function () {
+            //step = (target - leader)/10
+            //leader = leader + step
+            //先做水平方向 再做 竖直方向
+            //水平方向 要向左移动 自身宽度的一半
+            var targetX = pageX - pic.offsetWidth / 2;
+            //竖直方向 要向上移动 自身高度的一半
+            var targetY = pageY - pic.offsetHeight / 2;
+            var leaderX = pic.offsetLeft;
+            var leaderY = pic.offsetTop;
+            var stepX = (targetX - leaderX) / 10;
+            var stepY = (targetY - leaderY) / 10;
+            stepX = stepX > 0 ? Math.ceil(stepX) : Math.floor(stepX);
+            stepY = stepY > 0 ? Math.ceil(stepY) : Math.floor(stepY);
+            leaderX = leaderX + stepX;
+            leaderY = leaderY + stepY;
+            pic.style.left = leaderX + "px";
+            pic.style.top = leaderY + "px";
+            if (leaderX == targetX && leaderY == targetY) {
+                clearInterval(timer);
+            }
+        }, 15);
+    }
+</script>
+</body>
+</html>
