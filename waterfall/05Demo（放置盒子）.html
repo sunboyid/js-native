@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            float: left;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            //找人
+            var container = document.getElementById("container");
+            var boxes = container.children;
+            //第一行图片不用计算 左浮动即可 后面的要通过JS去摆放
+            //后面的通过JS去摆放就要知道第一行有几张图片
+            //第一行放完之后 后面的图片放到最短的那一列的下面
+            //另外触底之后还要自动加载
+
+            //3.计算第一行有多少张 （因为涉及到图片的宽度所以要放在onload中）
+            //一行有多少张 = 页面的宽度/盒子的宽度
+            var pageWidth = window.innerWidth;//页面宽度
+            var boxWidth = boxes[0].offsetWidth;//盒子宽度
+            //第一行有多少张 也就是 页面上有多少列 盒子
+            //多出来的小数 要舍去
+            var column = Math.floor(pageWidth / boxWidth);
+            console.log(column);
+
+            //4.寻找高度最小的那一列 以及这一列的 高度值
+            var arrHeight = [];//这个数组要保存每一列整体的高度
+            //先把第一行中每个盒子的高度保存到数组中
+            for (var i = 0; i < boxes.length; i++) {
+                //只要保存第一行 的 盒子的高度值
+                if (i < column) {
+                    arrHeight[i] = boxes[i].offsetHeight;
+                    //把第一行中每个盒子的高度保存起来
+                } else {
+                    //说明不是第一行 也就是第一行之后的盒子
+                    //那我就该 用JS去设置他的位置了
+                    var minHeight = getMin(arrHeight).value;//高度最小的那一列的高度
+                    var minHeightIndex = getMin(arrHeight).index;//高度最小的那一列
+                    //设置下一个盒子 的 top和left
+                    //top和left要生效 必须加定位
+                    boxes[i].style.position = "absolute";
+                    //left值 就是 高度最小的那一列 的索引 对应的 第一行的图片的offsetLeft
+                    boxes[i].style.left = boxes[minHeightIndex].offsetLeft + "px";
+                    //top就是当前高度最小的那一列的高度
+                    boxes[i].style.top = minHeight + "px";
+                    //把图片 放到这个位置之后 还要对数组进行更新
+                    //把图片 加到 高度最小的那一列之后 高度最小的那一列的高度值就增加了
+                    //增加了 新图片的高度
+                    arrHeight[minHeightIndex] = minHeight + boxes[i].offsetHeight;
+
+                }
+            }
+
+
+            console.log(arrHeight);
+            console.log(minHeight);
+            console.log(minHeightIndex);
+        }
+
+
+        function getMin(arr) {
+            var min = {};
+            min.index = 0;
+            min.value = arr[min.index];
+            //遍历数组中的每一项 让假设的最小值 去和每一个比较
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] < min.value) {
+                    min.value = arr[i];
+                    min.index = i;
+                }
+            }
+            return min;
+        }
+
+
+    </script>
+</head>
+<body>
+<div id="container" class="container">
+    <!--(.box>img[src="images/P_00$.jpg"])*9-->
+    <div class="box"><img src="images/P_000.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_001.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_002.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_003.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_004.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_005.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_006.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_007.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_008.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_009.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_010.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_011.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_012.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_013.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_014.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_015.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_016.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_017.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_018.jpg" alt=""/></div>
+    <div class="box"><img src="images/P_019.jpg" alt=""/></div>
+</div>
+</body>
+</html>
